@@ -11,3 +11,5 @@ Complejas y el Procesamiento del Lenguaje Natural [Tesis de Licenciatura]. Facul
 
 Además, en este link podrán encontrar el programa del Curso Análisis Cuantitativo en Redes Sociales y las diapositivas de cada encuentro:
 - https://drive.google.com/drive/folders/1WvE6XSE6T5Nzaq8ppEV3acqUYHmFwejl?usp=sharing
+
+Para consultas, sugerencias o comentarios, dejamos nuestras casillas de mails: lupipedraza@gmail.com y tomas.cicchini@gmail.com
