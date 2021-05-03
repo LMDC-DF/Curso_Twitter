@@ -66,7 +66,7 @@ def lector_claves(archivo_claves = 'claves_Twitter.txt'):
     Por default, se define el nombre del archivo de entrada como "claves_Twitter.txt", de forma tal 
     que lo único que hay que hacer es crear ese archivo por única vez con los datos de las claves
     """
-    with open(archivo_claves, 'r') as f:
+    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),archivo_claves), 'r') as f:
         claves = f.read().split('\n')
     return claves # Variable de salida, las claves ordenadas
 
@@ -124,7 +124,7 @@ class TwitterStreamer():
     def __init__(self):
         pass
 
-    def stream_tweets(self, fetched_tweets_filename, hash_tag_list, languages):
+    def stream_tweets(self, fetched_tweets_filename, hash_tag_list = '', languages = 'es'):
         # This handles Twitter authetification and the connection to Twitter Streaming API
         listener = StdOutListener(fetched_tweets_filename)
         auth = OAuthHandler(lector_claves()[0], lector_claves()[1])
