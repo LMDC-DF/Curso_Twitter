@@ -5,30 +5,37 @@ Created on Fri Apr 23 18:23:39 2021
 
 @author: lucia
 """
-import codigo_General
+import importlib.util
+import os
 
-path = 'Prueba/'
+path = '/home/tcicchini/Documentos/Cursos/Curso_Twitter/' # Este es el directorio donde está alojado el archivo codigo_General.py
+spec = importlib.util.spec_from_file_location('codigo_General', os.path.join(path,'codigo_General.py'))
+codigo_General = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(codigo_General)
+
+
+path_proyecto = '/home/tcicchini/Documentos/Cursos/Curso_Twitter/Prueba/' # Este es el nombre del directorio donde está el proyecto. 
 
 #Nombres de los archivos
-archivo_tweets='PruebaLarreta_Tweets.txt'
-archivo_guardado='PruebaLarreta_procesado.txt'
-archivo_usuarios='PruebaLarreta_usuarios.json'
-archivo_grafo='PruebaLarreta_grafo.gexf'
-archivo_grafo_hash='PruebaLarreta_grafo_hash.gexf'
+archivo_tweets = 'PruebaLarreta_Tweets.txt'
+archivo_guardado = 'PruebaLarreta_procesado.txt'
+archivo_usuarios = 'PruebaLarreta_usuarios.json'
+archivo_grafo = 'PruebaLarreta_grafo.gexf'
+archivo_grafo_hash = 'PruebaLarreta_grafo_hash.gexf'
 
 
 #De la bajada de datos no cambie nada.
 
 #Aca procesa y arma 1 csv con los tweets y un json con los usuarios 
-codigo_General.procesamiento(path + archivo_tweets,
-                             path + archivo_guardado,
-                             path + archivo_usuarios)
+codigo_General.procesamiento(path_proyecto + archivo_tweets,
+                             path_proyecto + archivo_guardado,
+                             path_proyecto + archivo_usuarios)
 
 
 #Acá se arma el objeto y se cargan los datos (se podría hacer todo junto si queremos)
 Larreta=codigo_General.Bases_Datos()
-Larreta.cargar_datos(path + archivo_guardado)
-Larreta.cargar_usuarios(path + archivo_usuarios)
+Larreta.cargar_datos(path_proyecto + archivo_guardado)
+Larreta.cargar_usuarios(path_proyecto + archivo_usuarios)
 
 #Funciones
 Larreta.plot_tipo_tweet()
