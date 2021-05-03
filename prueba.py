@@ -10,11 +10,11 @@ import codigo_General
 path = 'Prueba/'
 
 #Nombres de los archivos
-archivo_tweets='PruebaLarreta_Tweets.txt'
-archivo_guardado='PruebaLarreta_procesado.txt'
-archivo_usuarios='PruebaLarreta_usuarios.json'
-archivo_grafo='PruebaLarreta_grafo.gexf'
-archivo_grafo_hash='PruebaLarreta_grafo_hash.gexf'
+archivo_tweets='Palabra_tweets.txt'
+archivo_guardado='Palabra_procesado.txt'
+archivo_usuarios='Palabra_usuarios.json'
+archivo_grafo='Usuario_grafo.gexf'
+archivo_grafo_hash='Usuario_grafo_hash.gexf'
 
 
 #De la bajada de datos no cambie nada.

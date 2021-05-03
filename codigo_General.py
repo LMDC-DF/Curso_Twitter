@@ -157,8 +157,20 @@ class StdOutListener(StreamListener):
         print(status)
 
 #------------------------ Defino función de pesca de la actividad de un determinado usuario ----------------------
+def Descargar_por_palabra_stream(Palabras,Archivo_Tweets,idioma):
+    bajar_tweets = TwitterStreamer()
+    i = 0
+    while i < 1000:
+        try:
+            # Esta es la línea que ejecuta la función
+            bajar_tweets.stream_tweets(Archivo_Tweets,
+                                       Palabras,
+                                       idioma)
+        except:
+            pass
+        i += 1
 
-def pescar_palabras(Palabras,Archivo_Tweets,Cantidad=100):
+def Descargar_por_palabras(Palabras,Archivo_Tweets,Cantidad=100):
     
     '''
     Esta función busca descargar y guardar en un archivo todos los tweers (originales, QT o RT) de una lista de usuarios
@@ -179,14 +191,13 @@ def pescar_palabras(Palabras,Archivo_Tweets,Cantidad=100):
         
         #Guardarlos en el archivo
     for tweet in Tweets:
-            tweet = tweet._json
             with open(Archivo_Tweets, 'a') as tf:
-                json.dump(tweet,tf)
-                tf.write('\n\n')
-                                
+                data=json.dumps(tweet._json)
+                tf.write(data)
+                tf.write("\n")  
 #------------------------ Defino función de pesca de la actividad de un determinado usuario ----------------------
 
-def pescar_usuarios(Usuarios,Archivo_Tweets,Cantidad=100):
+def Descargar_por_usuarios(Usuarios,Archivo_Tweets,Cantidad=100):
     
     '''
     Esta función busca descargar y guardar en un archivo todos los tweers (originales, QT o RT) de una lista de usuarios
@@ -202,15 +213,15 @@ def pescar_usuarios(Usuarios,Archivo_Tweets,Cantidad=100):
     for usuario in Usuarios: #Para cada usuario
         
         #Descargar todos los tweets (Cantidad)
-        Tweets = tweepy.Cursor(api.user_timeline,screen_name=usuario,tweet_mode = 'extended',excluded_replies=True).items(Cantidad)
+        Tweets = tweepy.Cursor(api.user_timeline,screen_name=usuario,tweet_mode = 'extended').items(Cantidad)
         
         #Guardarlos en el archivo
         for tweet in Tweets:
             tweet = tweet._json
             with open(Archivo_Tweets, 'a') as tf:
-                json.dump(tweet,tf)
-                tf.write('\n\n')
-
+                data=json.dumps(tweet)
+                tf.write(data)
+                tf.write("\n")
 #----------------------        
 
         
@@ -653,12 +664,21 @@ def guardar_tweet(tweet):
             try:
                 data['tw_text']=tweet['extended_tweet']['full_text'].replace('\n',' ').replace(',',' ')
             except:
-                data['tw_text']=tweet['text'].replace('\n',' ').replace(',',' ')
+                try:
+                    data['tw_text']=tweet['full_text'].replace('\n',' ').replace(',',' ')
+                except:
+                    data['tw_text']=tweet['text'].replace('\n',' ').replace(',',' ')
 
             data['tw_favCount']=tweet['favorite_count']
             data['tw_rtCount']=tweet['retweet_count']
-            data['tw_qtCount']=tweet['quote_count']
-            data['tw_rpCount']=tweet['reply_count']
+            try:
+                data['tw_qtCount']=tweet['quote_count']
+            except:
+                data['tw_qtCount']=""
+            try:
+                data['tw_rpCount']=tweet['reply_count']
+            except:
+                data['tw_rpCount']=""
             try:
                 data['tw_location']=tweet['place']['full_name'].replace(',',' ')
             except:
@@ -748,9 +768,8 @@ def procesamiento(archivo_tweets,archivo_guardado,archivo_usuarios):
 
         with open(archivo_tweets, 'r', buffering = 1000000) as f:
             for line in f.read().split('\n'):
-                
                 if len(line) != 0:
-                    
+
                     tweet = json.loads(line) # Transformamos la línea (osea el tweet) en un json (diccionario anidado)
                     usuario=tweet['user']
                     usuarios[usuario['screen_name']]=guardar_usuario(usuario)
