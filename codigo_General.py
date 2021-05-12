@@ -573,7 +573,7 @@ class Bases_Datos():
             textos_completos=np.hstack([textos_originales,textos_qt])
             nube_palabras(textos_completos, archivo_imagen )
     
-    def plot_principales_Hashtags(self, archivo_imagen = '', fecha_inicial = '', fecha_final = ''):
+    def plot_principales_Hashtags(self, archivo_imagen = '', fecha_inicial = '', fecha_final = '',cantidad=20):
         """
         Gráfico de los principales Hashtags utilizados en todos los tweets.
         Se pueden usar los parámetros fecha_inicial y fecha_final para filtrar por fechas. Si no se completa se utilizarán todos los tweets realizados entre los tiempos de levantados (esto no incluye tweets más viejos que hayan sido retwiteados y citados)
@@ -591,8 +591,7 @@ class Bases_Datos():
 
         d = self.tweets[(self.tweets.tw_created_at.between(fecha_inicial, fecha_final))|((self.tweets.relacion_nuevo_original=='Original') & (self.tweets.or_created_at.between(fecha_inicial, fecha_final)))].copy()
         
-        datos = pd.DataFrame(data = {'Hashtags' : ' '.join(d.tw_hashtags.dropna().values).split()})['Hashtags'].value_counts().sort_values(ascending = True)
-        
+        datos = pd.DataFrame(data = {'Hashtags' : ' '.join(d.tw_hashtags.dropna().values).split()})['Hashtags'].value_counts().sort_values(ascending = True)[-20:]
         sbn.set_context("paper", font_scale = 2)
         fig, ax = plt.subplots(figsize = (11,8))
         datos.plot(kind = 'barh', ax = ax)
@@ -811,8 +810,8 @@ def procesamiento(archivo_tweets,archivo_guardado,archivo_usuarios):
                             arch.write(',')
                             arch.write('{}\n'.format(relacion_nuevo_original))   
                     
-                    with open(archivo_usuarios, 'w') as outfile:
-                        json.dump(usuarios, outfile)            
+        with open(archivo_usuarios, 'w') as outfile:
+            json.dump(usuarios, outfile)            
                     
 
 
