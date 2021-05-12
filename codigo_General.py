@@ -253,6 +253,8 @@ class Bases_Datos():
                                      'or_id' : object},
                             parse_dates = ['tw_created_at','or_created_at'],
                             date_parser = pd.to_datetime)
+        datos['tw_created_at'] = datos['tw_created_at'] - timedelta(hours = 3)
+        datos['or_created_at'] = datos['or_created_at'] - timedelta(hours = 3) 
         self.tweets=datos 
         
     def cargar_usuarios(self,archivo_usuarios):

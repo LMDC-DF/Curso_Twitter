@@ -56,8 +56,9 @@ lista_palabras.extend(lista)
 
 #Usando for podemos recorrer una lista, y hacer lo indicado abajo con cada elemento
 lista_nueva=[]
-for elemento in lista:
-    lista_nueva.append(elemento+1) #Es muy importante la identación!!
+for x in lista:
+    print(x)
+    lista_nueva.append(x+1) #Es muy importante la identación!!
 
 #A veces se hace comprimido.
 lista_nueva=[elemento+1 for elemento in lista]
