@@ -337,9 +337,9 @@ class Bases_Datos():
         """
         #Levantar los datos preprocesados del archivo
     
-        originales = set(self.tweets.tw_id.values) #Conjunto de tweets originales
-        rt = set(self.tweets[self.tweets.relacion_nuevo_original == 'RT'].or_id.values) #Conjunto de retweets
-        citas = set(self.tweets[self.tweets.relacion_nuevo_original == 'QT'].or_id.values) #Conjunto de citas    
+        originales = set(self.tweets.or_id.values) #Conjunto de tweets originales
+        rt = set(self.tweets[self.tweets.relacion_nuevo_original == 'RT'].tw_id.values) #Conjunto de retweets
+        citas = set(self.tweets[self.tweets.relacion_nuevo_original == 'QT'].tw_id.values) #Conjunto de citas    
         total_tweets = len(originales.union(rt).union(citas)) #Cantidad total de tweets
         
         # Realizar la figura
