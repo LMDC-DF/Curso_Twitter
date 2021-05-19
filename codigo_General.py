@@ -645,7 +645,7 @@ class Bases_Datos():
             fecha_inicial=pd.to_datetime(fecha_inicial).tz_localize('UTC')
             
         d = self.tweets[self.tweets.or_created_at.between(fecha_inicial, fecha_final)].copy()
-        d = d.drop_duplicates(subset = 'or_id', keep = 'last') # Nos quedamos con los or_id únicos, correspondientes al último que fue replicado, así las métricas son las más actualizadas
+        d = d.drop_duplicates(subset = 'or_id', keep = 'last').dropna(subset=[metrica_interes]) # Nos quedamos con los or_id únicos, correspondientes al último que fue replicado, así las métricas son las más actualizadas
         d_sum = d.groupby('or_user_screenName')[metrica_interes].sum().reset_index().rename({metrica_interes : metrica_interes[3:]}, axis = 1) # Sumamos las métricas en cuestión de todos los tweets de un usuario
         d_count = d.groupby('or_user_screenName')[metrica_interes].count().reset_index().rename({metrica_interes : 'Cantidad de Tweets'}, axis = 1) # Contamos los tweets distintos generados por el usuario, para también reportar esto
         
