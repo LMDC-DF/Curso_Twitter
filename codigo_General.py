@@ -452,23 +452,20 @@ class Bases_Datos():
             
             nx.set_edge_attributes(G,enlace_peso,'weight') #Agregar los pesos
 
-            comunidades_louvain = community.best_partition(G)
-            
-            for us in self.usuarios.keys():
-                try:
-                    self.usuarios[us]['Comunidad_Louvain']=comunidades_louvain[us]    
-                except:
-                    pass
-            #Agregar los atributos si está el archivo correspondiente
             nx.set_node_attributes(G,self.usuarios)                
             self.grafo=G
         else:
 
             if tipo=='menciones':
-               texto_usuario_original = self.tweets[['or_menciones','or_user_screenName']].drop_duplicates().dropna()+self.tweets[['or_menciones','tw_user_screenName']].drop_duplicates().dropna()
-               texto_usuario_original = texto_usuario_original.groupby(['or_user_screenName'])['or_menciones'].apply(' '.join)        
+               texto_usuario_original = self.tweets[['or_menciones','or_user_screenName']]
+               texto_usuario_tw = self.tweets[['tw_menciones','tw_user_screenName']].rename({ 'tw_menciones': 'or_menciones','tw_user_screenName':'or_user_screenName' }, axis = 1)
+               texto_usuario_original=texto_usuario_original.append(texto_usuario_tw).drop_duplicates().dropna()
+               texto_usuario_original = texto_usuario_original.groupby(['or_user_screenName'])['or_menciones'].apply(' '.join)  
+                
             elif tipo=='hashtags':            
-               texto_usuario_original = self.tweets[['or_hashtags','or_user_screenName']].drop_duplicates().dropna()+self.tweets[['or_hashtags','tw_user_screenName']].drop_duplicates().dropna()
+               texto_usuario_original = self.tweets[['or_hashtags','or_user_screenName']]
+               texto_usuario_tw = self.tweets[['tw_hashtags','tw_user_screenName']].rename({ 'tw_hashtags': 'or_hashtags','tw_user_screenName':'or_user_screenName' }, axis = 1)
+               texto_usuario_original=texto_usuario_original.append(texto_usuario_tw).drop_duplicates().dropna()
                texto_usuario_original = texto_usuario_original.groupby(['or_user_screenName'])['or_hashtags'].apply(' '.join)  
             else:
                 print('tipo solo puede ser usuarios, menciones o hashtags')
@@ -503,10 +500,6 @@ class Bases_Datos():
                 G.add_edge(item[0][0],item[0][1], weight = item[1])
             
             #Separar en comunidades
-            comunidades_louvian = community.best_partition(G)
-            
-            #Agregar las comunidades y la cantidad de apariciones como atributos
-            nx.set_node_attributes(G, comunidades_louvian, 'Comunidad_Louvain')
             nx.set_node_attributes(G, hashtag_ocurrencia, 'Impacto')
             if tipo=='menciones':
                 self.grafo_menciones=G
@@ -518,6 +511,28 @@ class Bases_Datos():
             nx.write_gexf(G, archivo_grafo)
         #Devolver el grafo
         return G
+
+    def agregar_comunidades_Louvain(self,grafo='usuarios',archivo_grafo=''):
+        '''
+        Una vez calculado el grafo esta función hace una partición de los nodos con el método Louvain y agrega la comuna a cada nodo.
+        '''
+        if grafo=='usuarios':
+            G=self.grafo
+        elif grafo=='hashtags':
+            G=self.grafo_hashtags
+        elif grafo=='menciones':
+            G=self.grafo_menciones
+        else:
+            print('Solo se puede elegir grafo usuarios, hashtags o menciones')
+            
+        comunidades_louvian = community.best_partition(G)
+        nx.set_node_attributes(G, comunidades_louvian, 'Comunidad_Louvain')
+        if archivo_grafo!='':
+            nx.write_gexf(G, archivo_grafo)
+        #Devolver el grafo
+        return G
+
+
     
     def agregar_centrality(self,centrality='grado'):
         '''
