@@ -12,7 +12,7 @@ Importamos una librería que se llama codigo_General que tiene todas las funcion
 
 El código a continuación está armado como ejemplo, pero la idea es que puedan entenderlo para poder usarlo, modificarlo, copiar partes, etc.
 """
-
+import codigo_General
 
 import importlib.util
 import os

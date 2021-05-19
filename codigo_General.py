@@ -434,12 +434,13 @@ class Bases_Datos():
             if dirigido:
                 G = nx.DiGraph()            
             
-            
             datos = self.tweets
             #Elegir si nos quedamos con los enlaces RT, QT (o ambos)    
             if tipo_enlace == 'RT' or tipo_enlace == 'QT':
                 datos = self.tweets[self.tweets.relacion_nuevo_original == tipo_enlace]
-          
+            else:
+                datos = self.tweets[self.tweets.relacion_nuevo_original != 'Original']
+                
             
             enlace_peso={} #diccionario para poner cada enlace y su peso                      
             for i in range(len(datos)): #Para cada RT y/o QT
@@ -451,11 +452,13 @@ class Bases_Datos():
             
             nx.set_edge_attributes(G,enlace_peso,'weight') #Agregar los pesos
 
-
             comunidades_louvain = community.best_partition(G)
             
             for us in self.usuarios.keys():
-                self.usuarios[us]['Comunidad_Louvain']=comunidades_louvain[us]    
+                try:
+                    self.usuarios[us]['Comunidad_Louvain']=comunidades_louvain[us]    
+                except:
+                    pass
             #Agregar los atributos si está el archivo correspondiente
             nx.set_node_attributes(G,self.usuarios)                
             self.grafo=G
@@ -464,7 +467,7 @@ class Bases_Datos():
             if tipo=='menciones':
                texto_usuario_original = self.tweets[['or_menciones','or_user_screenName']].drop_duplicates().dropna()+self.tweets[['or_menciones','tw_user_screenName']].drop_duplicates().dropna()
                texto_usuario_original = texto_usuario_original.groupby(['or_user_screenName'])['or_menciones'].apply(' '.join)        
-            elif tipo=='hashtags':
+            elif tipo=='hashtags':            
                texto_usuario_original = self.tweets[['or_hashtags','or_user_screenName']].drop_duplicates().dropna()+self.tweets[['or_hashtags','tw_user_screenName']].drop_duplicates().dropna()
                texto_usuario_original = texto_usuario_original.groupby(['or_user_screenName'])['or_hashtags'].apply(' '.join)  
             else:
