@@ -124,7 +124,7 @@ class TwitterStreamer():
     def __init__(self):
         pass
 
-    def stream_tweets(self, fetched_tweets_filename, hash_tag_list = '', languages = ['es']):
+    def stream_tweets(self, fetched_tweets_filename, hash_tag_list = '', languages = ['es'], follow = None):
         # This handles Twitter authetification and the connection to Twitter Streaming API
         listener = StdOutListener(fetched_tweets_filename)
         auth = OAuthHandler(lector_claves()[0], lector_claves()[1])
@@ -135,6 +135,7 @@ class TwitterStreamer():
         if len(hash_tag_list) != 0:
             stream.filter(languages = languages,
                           track = hash_tag_list,
+                          follow = follow,
                           )
         else:
             stream.sample(languages = languages)
