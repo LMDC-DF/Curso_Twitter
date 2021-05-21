@@ -158,7 +158,7 @@ class StdOutListener(StreamListener):
         print(status)
 
 #------------------------ Defino función de pesca de la actividad de un determinado usuario ----------------------
-def Descargar_por_palabra_stream(Palabras,Archivo_Tweets,idioma):
+def Descargar_por_palabra_stream(Palabras,Archivo_Tweets,idioma, follow):
     bajar_tweets = TwitterStreamer()
     i = 0
     while i < 1000:
@@ -166,7 +166,8 @@ def Descargar_por_palabra_stream(Palabras,Archivo_Tweets,idioma):
             # Esta es la línea que ejecuta la función
             bajar_tweets.stream_tweets(Archivo_Tweets,
                                        Palabras,
-                                       idioma)
+                                       idioma,
+                                       follow)
         except:
             pass
         i += 1
