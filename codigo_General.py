@@ -138,8 +138,7 @@ class TwitterStreamer():
                           follow = follow,
                           )
         else:
-            stream.sample(languages = languages,
-            		   follow = follow)
+            stream.sample(languages = languages,)
 class StdOutListener(StreamListener):
     """
     This is a basic listener that just prints received tweets to stdout.
